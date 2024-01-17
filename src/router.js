@@ -1,17 +1,17 @@
 import { createRouter, createWebHistory } from "vue-router"
 
 import List from './components/ListComponent.vue'
-import Save from './components/SaveComponent.vue' //chan components
+import Save from './components/SaveComponent.vue'
 
 const routes = [
     {
         name:'list',
-        path:'/', //change
+        path:'/', 
         component: List
     },
     {
         name:'save',
-        path:'/save/:slug?', //change
+        path:'/save/:id?', 
         component: Save
     },
 ]

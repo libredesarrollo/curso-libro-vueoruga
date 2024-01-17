@@ -1,44 +1,44 @@
 <template>
   <h1 v-if="post">
-    Actualizar Post <span class="font-bold">{{ post.title }}</span>
+    Update Post <span class="font-bold">{{ post.title }}</span>
   </h1>
-  <h1 v-else>Crear Post</h1>
+  <h1 v-else>Create Post</h1>
 
   <form @submit.prevent="submit">
     <div class="grid grid-cols-2 gap-3">
       <div class="col-span-2">
         <o-field
-          label="Título"
+          label="Title"
           :variant="errors.title ? 'danger' : 'primary'"
           :message="errors.title"
         >
-          <o-input v-model="form.title" value=""></o-input>
+          <o-input v-model="form.title" ></o-input>
         </o-field>
       </div>
 
       <o-field
         :variant="errors.description ? 'danger' : 'primary'"
         :message="errors.description"
-        label="Descripción"
+        label="Description"
       >
-        <o-input v-model="form.description" type="textarea" value=""></o-input>
+        <o-input v-model="form.description" type="textarea" ></o-input>
       </o-field>
 
       <o-field
         :variant="errors.content ? 'danger' : 'primary'"
         :message="errors.content"
-        label="Contenido"
+        label="Content"
       >
-        <o-input v-model="form.content" type="textarea" value=""></o-input>
+        <o-input v-model="form.content" type="textarea" ></o-input>
       </o-field>
       <o-field
         :variant="errors.category_id ? 'danger' : 'primary'"
         :message="errors.category_id"
-        label="Categoría"
+        label="Category"
       >
         <o-select
           v-model="form.category_id"
-          placeholder="Seleccione una categoría"
+          placeholder="Select a category"
         >
           <option v-for="c in categories" v-bind:key="c.id" :value="c.id">
             {{ c.title }}
@@ -50,9 +50,9 @@
         :message="errors.posted"
         label="Posted"
       >
-        <o-select v-model="form.posted" placeholder="Seleccione un estado">
-          <option value="yes">Si</option>
-          <option value="not">No</option>
+        <o-select v-model="form.posted" placeholder="Select a state">
+          <option value="yes">Yes</option>
+          <option value="not">Not</option>
         </o-select>
       </o-field>
 
@@ -61,18 +61,18 @@
           <o-upload v-model="file">
             <o-button tag="a" variant="primary">
               <o-icon icon="upload"></o-icon>
-              <span>Click para cargar</span>
+              <span>Click to upload</span>
             </o-button>
           </o-upload>
         </o-field>
-        <o-button icon-left="upload" @click="upload"> Subir </o-button>
+        <o-button icon-left="upload" @click="upload"> Upload </o-button>
       </div>
       <div class="flex gap-2" v-if="post">
         <o-field :message="fileError">
           <o-upload v-model="filesDaD" multiple drag-drop>
             <section>
               <o-icon icon="upload"></o-icon>
-              <span>Drag and Drop para cargar archivos</span>
+              <span>Drag and Drop to upload</span>
             </section>
           </o-upload>
         </o-field>
@@ -82,7 +82,7 @@
       </div>
     </div>
     <br />
-    <o-button variant="primary" native-type="submit">Enviar</o-button>
+    <o-button variant="primary" native-type="submit">Send</o-button>
   </form>
 </template>
 
@@ -95,8 +95,8 @@ export default {
         title: "",
         description: "",
         content: "",
-        category_id: "",
-        posted: "",
+        category_id: "1",
+        posted: "yes",
       },
       errors: {
         title: "",
@@ -112,7 +112,7 @@ export default {
     };
   },
   async mounted() {
-    if (this.$route.params.slug) {
+    if (this.$route.params.id) {
       await this.getPost();
       this.initPost();
     }
@@ -131,10 +131,10 @@ export default {
 
       if (this.post == "")
         return this.$axios
-          .post("https://crudcrud.com/api/post", this.form)
+          .post(this.$root.urlCRUDPost, this.form)
           .then(() => {
             this.$oruga.notification.open({
-              message: "Registro procesado con éxito",
+              message: "Created",
               position: "bottom-right",
               duration: 4000,
               closable: true,
@@ -160,10 +160,10 @@ export default {
           });
       // actualizar
       this.$axios
-        .patch("https://crudcrud.com/api/post/" + this.post.id, this.form)
+        .put(this.$root.urlCRUDPost +'/'+ this.$route.params.id, this.form)
         .then(() => {
           this.$oruga.notification.open({
-            message: "Registro procesado con éxito",
+            message: "Created",
             position: "bottom-right",
             duration: 4000,
             closable: true,
@@ -207,20 +207,20 @@ export default {
         });
     },
     getCategory() {
-      // this.$axios.get("https://crudcrud.com/api/category/all").then((res) => {
-      //   this.categories = res.data;
-      // });
-
       this.categories = [
-        // {
-        //   id:1,
-        //   title:'Cate 1'
-        // }
+        {
+          id:1,
+          title:'Cate 1'
+        },
+        {
+          id:2,
+          title:'Cate 2'
+        },
       ]
     },
     async getPost() {
       this.post = await this.$axios.get(
-        "https://crudcrud.com/api/post/slug/" + this.$route.params.slug
+        this.$root.urlCRUDPost +'/'+ this.$route.params.id
       );
       this.post = this.post.data;
     },

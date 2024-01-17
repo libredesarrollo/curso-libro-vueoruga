@@ -1,4 +1,5 @@
 import { createApp } from "vue";
+import "./css/main.css"
 
 // Oruga
 import Oruga from '@oruga-ui/oruga-next'
@@ -10,6 +11,7 @@ import '@oruga-ui/theme-oruga/dist/oruga-full.min.css';
 
 //Material Design
 import "@mdi/font/css/materialdesignicons.min.css"
+
 
 import axios from 'axios'
 

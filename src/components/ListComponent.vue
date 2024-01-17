@@ -2,47 +2,44 @@
   <div>
     <o-modal v-model:active="confirmDeleteActive">
       <div class="p-4">
-        <p>¿Seguro que quieres eliminar el registro selecionado?</p>
+        <p>Are you sure you want to delete the selected record?</p>
       </div>
 
       <div class="flex flex-row-reverse gap-2 bg-gray-100 p-3">
-        <o-button variant="danger" @click="deletePost()">Eliminar</o-button>
-        <o-button @click="confirmDeleteActive = false">Cancelar</o-button>
+        <o-button variant="danger" @click="deletePost()">Delete</o-button>
+        <o-button @click="confirmDeleteActive = false">Cancel</o-button>
       </div>
     </o-modal>
 
     <h1>List</h1>
 
     <o-button iconLeft="plus" @click="$router.push({ name: 'save' })"
-      >Crear</o-button
+      >Create</o-button
     >
 
     <div class="mb-5"></div>
 
     <o-table
       :loading="isLoading"
-      :data="posts.current_page && posts.data.length == 0 ? [] : posts.data"
+      :data="posts.current_page && posts.length == 0 ? [] : posts"
     >
       <o-table-column field="id" label="ID" numeric v-slot="p">
-        {{ p.row.id }}
+        {{ p.row._id }}
       </o-table-column>
-      <o-table-column field="title" label="Título" v-slot="p">
+      <o-table-column field="title" label="Title" v-slot="p">
         {{ p.row.title }}
       </o-table-column>
-      <o-table-column field="posted" label="Posteado" v-slot="p">
+      <o-table-column field="posted" label="Posted" v-slot="p">
         {{ p.row.posted }}
       </o-table-column>
-      <o-table-column field="created_at" label="Fecha" v-slot="p">
-        {{ p.row.created_at }}
+      <o-table-column field="category" label="Category" v-slot="p">
+        {{ p.row.category_id }}
       </o-table-column>
-      <o-table-column field="category" label="Categoría" v-slot="p">
-        {{ p.row.category.title }}
-      </o-table-column>
-      <o-table-column field="slug" label="Acciones" v-slot="p">
+      <o-table-column field="_id" label="Actions" v-slot="p">
         <router-link
           class="mr-3"
-          :to="{ name: 'save', params: { slug: p.row.slug } }"
-          >Editar</router-link
+          :to="{ name: 'save', params: { id: p.row._id } }"
+          >Edit</router-link
         >
 
         <o-button
@@ -54,7 +51,7 @@
             deletePostRow = p;
             confirmDeleteActive = true;
           "
-          >Eliminar</o-button
+          >Delete</o-button
         >
       </o-table-column>
     </o-table>
@@ -79,6 +76,7 @@
 </template>
 
 <script>
+//posts.data row.id List.vue Save.vue /api/post/ resources/js/vu
 export default {
   data() {
     return {
@@ -90,24 +88,26 @@ export default {
     };
   },
   methods: {
+
     updatePage() {
       setTimeout(this.listPage, 100);
     },
 
     listPage() {
       this.isLoading = true;
-      this.$axios.get("https://crudcrud.com/api/post?page=" + this.currentPage).then((res) => {
+      this.$axios.get(this.$root.urlCRUDPost+"?page=" + this.currentPage).then((res) => {
         this.posts = res.data;
-        console.log(this.posts);
+        console.log(res.data);
+        console.log(res);
         this.isLoading = false;
       });
     },
     deletePost() {
       this.confirmDeleteActive = false;
-      this.posts.data.splice(this.deletePostRow.index, 1);
-      this.$axios.delete("https://crudcrud.com/api/post/" + this.deletePostRow.row.id);
+      this.posts.splice(this.deletePostRow.index, 1);
+      this.$axios.delete(this.$root.urlCRUDPost +'/' + this.deletePostRow.row._id);
       this.$oruga.notification.open({
-        message: "Registro eliminado",
+        message: "Deleted record",
         position: "bottom-right",
         variant: "danger",
         duration: 4000,
