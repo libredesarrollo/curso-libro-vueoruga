@@ -1,4 +1,4 @@
-# Curso/Libro: Vue + Pinia
+# Curso/Libro: Vue + Oruga UI
 
 Bienvenido/a al repositorio **curso-libro-vuepinia**, parte del proyecto de Libre Desarrollo. Este curso/libro está inspirado en la guía **Primeros pasos con Vue 3**, orientada a introducirte en Vue 3 desde cero.
 
